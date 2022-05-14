@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"unicode"
 )
 
@@ -18,6 +19,16 @@ func isLetter(char string) bool {
 		}
 	}
 	return true
+}
+
+// isNumber checks if the character passed in is a number. Returns true if it is number, false if it's not
+func isNumber(char string) bool {
+	_, err := strconv.ParseInt(char, 10, 64)
+	if err == nil {
+		return true
+	} else {
+		return false
+	}
 }
 
 // tokenizer takes a python function as input and tokenizes it
@@ -50,9 +61,13 @@ func tokenizer(input string) {
 				value: letters,
 			})
 		} else if char == "(" || char == ")" {
-			// fmt.Println(fmt.Sprintf("tokenizer char: %v", char)) // __AUTO_GENERATED_PRINT_VAR__
 			tokens = append(tokens, token{
 				kind:  "paren",
+				value: char,
+			})
+		} else if isNumber(char) {
+			tokens = append(tokens, token{
+				kind:  "number",
 				value: char,
 			})
 		}
@@ -61,5 +76,5 @@ func tokenizer(input string) {
 }
 
 func main() {
-	tokenizer("def hello()")
+	tokenizer("def hello(4, 5)")
 }
