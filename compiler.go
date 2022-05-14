@@ -29,6 +29,7 @@ func tokenizer(input string) {
 	for i := 0; i < len([]rune(input)); i++ {
 		// get the current character
 		char := string(input[i])
+		// fmt.Println(fmt.Sprintf("tokenizer char: %v", char)) // __AUTO_GENERATED_PRINT_VAR__
 
 		// find all the word tokens
 		if isLetter(char) {
@@ -38,11 +39,21 @@ func tokenizer(input string) {
 				letters += char
 				i++
 				char = string(input[i])
-			}
 
+				// make sure the next character is still a letter. if not, don't eat up the character
+				if !isLetter(char) {
+					i--
+				}
+			}
 			tokens = append(tokens, token{
 				kind:  "name",
 				value: letters,
+			})
+		} else if char == "(" || char == ")" {
+			// fmt.Println(fmt.Sprintf("tokenizer char: %v", char)) // __AUTO_GENERATED_PRINT_VAR__
+			tokens = append(tokens, token{
+				kind:  "paren",
+				value: char,
 			})
 		}
 	}
